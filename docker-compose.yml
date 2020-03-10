@@ -31,7 +31,7 @@ services:
     links:
       - redis
     env_file:
-      - ./.envs/.django
+      - ./.envs
     networks:
       - djangonetwork
   db:
