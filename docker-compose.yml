@@ -28,8 +28,6 @@ services:
       - ./src:/src
     expose:
       - "8000"
-    links:
-      - redis
     env_file:
       - ./.envs
     networks:
