@@ -1,0 +1,52 @@
+version: "3"
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: mynginx
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/src
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+    networks:
+      - djangonetwork
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mydjango
+    depends_on:
+      - db
+    volumes:
+      - ./src:/src
+    expose:
+      - "8000"
+    links:
+      - redis
+    env_file:
+      - ./.envs/.django
+    networks:
+      - djangonetwork
+  db:
+    build:
+      context: .
+      dockerfile: compose/postgres/Dockerfile
+    container_name: mypostgres
+    env_file:
+      - ./.env/.postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data
+      - local_postgres_data_backups:/backups
+    networks:
+      - djangonetwork
+
+networks:
+  djangonetwork:
+    driver: bridge
