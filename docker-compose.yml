@@ -32,18 +32,7 @@ services:
       - ./.env
     networks:
       - djangonetwork
-  db:
-    build:
-      context: .
-      dockerfile: compose/postgres/Dockerfile
-    container_name: mypostgres
-    env_file:
-      - ./.env
-    volumes:
-      - local_postgres_data:/var/lib/postgresql/data
-      - local_postgres_data_backups:/backups
-    networks:
-      - djangonetwork
+
 
 networks:
   djangonetwork:
